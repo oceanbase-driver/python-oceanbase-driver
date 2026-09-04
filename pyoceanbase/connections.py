@@ -358,7 +358,7 @@ class Connection:
         self.server_public_key = server_public_key
 
         self._connect_attrs = {
-            "_client_name": "pymysql",
+            "_client_name": "pyoceanbase",
             "_client_version": VERSION_STRING,
             "_pid": str(os.getpid()),
         }

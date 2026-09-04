@@ -65,9 +65,9 @@ def get_client_info():  # for MySQLdb compatibility
 def install_as_MySQLdb():
     """
     After this function is called, any application that imports MySQLdb
-    will unwittingly actually use pymysql.
+    will unwittingly actually use pyoceanbase.
     """
-    sys.modules["MySQLdb"] = sys.modules["pymysql"]
+    sys.modules["MySQLdb"] = sys.modules["pyoceanbase"]
 
 
 # end of mysqlclient compatibility code

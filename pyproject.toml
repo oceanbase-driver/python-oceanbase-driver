@@ -1,6 +1,6 @@
 [project]
-name = "PyMySQL"
-description = "Pure Python MySQL Driver"
+name = "pyoceanbase"
+description = "Pure Python OceanBase Driver (PyMySQL fork with Oracle tenant support)"
 authors = [
     {name = "Inada Naoki", email = "songofacandy@gmail.com"},
     {name = "Yutaka Matsubara", email = "yutaka.matsubara@gmail.com"}
@@ -29,9 +29,8 @@ dynamic = ["version"]
 ]
 
 [project.urls]
-"Project" = "https://github.com/PyMySQL/PyMySQL"
-"Documentation" = "https://pymysql.readthedocs.io/"
-"Changelog" = "https://github.com/PyMySQL/PyMySQL/blob/main/CHANGELOG.md"
+"Project" = "https://github.com/oceanbase-driver/python-oceanbase-driver"
+"Changelog" = "https://github.com/oceanbase-driver/python-oceanbase-driver/blob/master/CHANGELOG.md"
 
 [build-system]
 requires = ["setuptools>=77"]
@@ -39,15 +38,15 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
 namespaces = false
-include = ["pymysql*"]
-exclude = ["tests*", "pymysql.tests*"]
+include = ["pyoceanbase*"]
+exclude = ["tests*", "pyoceanbase.tests*"]
 
 [tool.setuptools.dynamic]
-version = {attr = "pymysql.VERSION_STRING"}
+version = {attr = "pyoceanbase.VERSION_STRING"}
 
 [tool.ruff]
 exclude = [
-    "pymysql/tests/thirdparty",
+    "pyoceanbase/tests/thirdparty",
 ]
 
 [tool.ruff.lint]

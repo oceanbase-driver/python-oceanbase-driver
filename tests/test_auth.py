@@ -1,10 +1,10 @@
 """Test for auth methods supported by MySQL 8"""
 
 import os
-import pymysql
+import pyoceanbase as pymysql
 
-# pymysql.connections.DEBUG = True
-# pymysql._auth.DEBUG = True
+# pyoceanbase.connections.DEBUG = True
+# pyoceanbase._auth.DEBUG = True
 
 host = "127.0.0.1"
 port = 3306

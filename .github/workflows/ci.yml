@@ -16,5 +16,5 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - run: pip install .
-      - run: python -c "import pymysql; print(pymysql.VERSION_STRING)"
-      - run: python -m compileall -q pymysql
+      - run: python -c "import pyoceanbase; print(pyoceanbase.VERSION_STRING)"
+      - run: python -m compileall -q pyoceanbase

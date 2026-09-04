@@ -362,4 +362,4 @@ conversions = encoders.copy()
 conversions.update(decoders)
 Thing2Literal = escape_str
 
-# Run doctests with `pytest --doctest-modules pymysql/converters.py`
+# Run doctests with `pytest --doctest-modules pyoceanbase/converters.py`

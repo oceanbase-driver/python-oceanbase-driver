@@ -5,7 +5,7 @@ Python 的 OceanBase 驱动，基于 `PyMySQL 1.2.0`，纯 Python，用法与 Py
 未打补丁的 MySQL 协议驱动连 Oracle 租户会被服务端拒绝：
 
 ```text
-pymysql.err.NotSupportedError: (1235, 'Oracle tenant for current client driver is not supported')
+pyoceanbase.err.NotSupportedError: (1235, 'Oracle tenant for current client driver is not supported')
 ```
 
 原理：OceanBase 登录时检查该位（`OB_CLIENT_SUPPORT_ORACLE_MODE`，
@@ -15,17 +15,17 @@ PyMySQL 默认没置。本驱动默认置上，对 MySQL / MariaDB / OB MySQL �
 ## 安装
 
 ```shell
-pip install "git+https://github.com/oceanbase-driver/python-oceanbase-driver.git@v1.0.0"
+pip install pyoceanbase
 ```
 
-注意：本驱动与上游 PyMySQL 是同一个 `pymysql` 包，互斥安装，二选一。
+注意：顶层包名为 `pyoceanbase`，可与上游 PyMySQL 共存于同一环境，按需选用。
 
 ## 用法
 
 ```python
-import pymysql
+import pyoceanbase
 
-conn = pymysql.connect(
+conn = pyoceanbase.connect(
     host="HOST",
     port=9090,
     user="USER@TENANT#CLUSTER",
