@@ -1,107 +1,50 @@
-[![Documentation Status](https://readthedocs.org/projects/pymysql/badge/?version=latest)](https://pymysql.readthedocs.io/)
-[![codecov](https://codecov.io/gh/PyMySQL/PyMySQL/branch/main/graph/badge.svg?token=ppEuaNXBW4)](https://codecov.io/gh/PyMySQL/PyMySQL)
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/PyMySQL/PyMySQL)
+# python-oceanbase-driver
 
-# PyMySQL
+Python 的 OceanBase 驱动，基于 `PyMySQL 1.2.0`，纯 Python，用法与 PyMySQL 完全一致，
+区别是默认置上握手包 capability bit27，可直连 OceanBase **Oracle 租户**。
+未打补丁的 MySQL 协议驱动连 Oracle 租户会被服务端拒绝：
 
-This package contains a pure-Python MySQL and MariaDB client library, based on
-[PEP 249](https://www.python.org/dev/peps/pep-0249/).
-
-## Requirements
-
-- Python -- one of the following:
-  - [CPython](https://www.python.org/) : 3.9 and newer
-  - [PyPy](https://pypy.org/) : Latest 3.x version
-- MySQL Server -- one of the following:
-  - [MySQL](https://www.mysql.com/) LTS versions
-  - [MariaDB](https://mariadb.org/) LTS versions
-
-## Installation
-
-Package is uploaded on [PyPI](https://pypi.org/project/PyMySQL).
-
-You can install it with pip:
-
-    $ python3 -m pip install PyMySQL
-
-To use "sha256_password" or "caching_sha2_password" for authenticate,
-you need to install additional dependency:
-
-    $ python3 -m pip install PyMySQL[rsa]
-
-To use MariaDB's "ed25519" authentication method, you need to install
-additional dependency:
-
-    $ python3 -m pip install PyMySQL[ed25519]
-
-## Documentation
-
-Documentation is available online: <https://pymysql.readthedocs.io/>
-
-For support, please refer to the
-[StackOverflow](https://stackoverflow.com/questions/tagged/pymysql).
-
-## Example
-
-The following examples make use of a simple table
-
-``` sql
-CREATE TABLE `users` (
-    `id` int(11) NOT NULL AUTO_INCREMENT,
-    `email` varchar(255) COLLATE utf8_bin NOT NULL,
-    `password` varchar(255) COLLATE utf8_bin NOT NULL,
-    PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin
-AUTO_INCREMENT=1 ;
+```text
+pymysql.err.NotSupportedError: (1235, 'Oracle tenant for current client driver is not supported')
 ```
 
-``` python
-import pymysql.cursors
+原理：OceanBase 登录时检查该位（`OB_CLIENT_SUPPORT_ORACLE_MODE`，
+与 MySQL 8.0 的 `CLIENT_QUERY_ATTRIBUTES` 同一位），mysql 8.0 客户端默认置位，
+PyMySQL 默认没置。本驱动默认置上，对 MySQL / MariaDB / OB MySQL 租户无副作用。
 
-# Connect to the database
-connection = pymysql.connect(host='localhost',
-                             user='user',
-                             password='passwd',
-                             database='db',
-                             cursorclass=pymysql.cursors.DictCursor)
+## 安装
 
-with connection:
-    with connection.cursor() as cursor:
-        # Create a new record
-        sql = "INSERT INTO `users` (`email`, `password`) VALUES (%s, %s)"
-        cursor.execute(sql, ('webmaster@python.org', 'very-secret'))
-
-    # connection is not autocommit by default. So you must commit to save
-    # your changes.
-    connection.commit()
-
-    with connection.cursor() as cursor:
-        # Read a single record
-        sql = "SELECT `id`, `password` FROM `users` WHERE `email`=%s"
-        cursor.execute(sql, ('webmaster@python.org',))
-        result = cursor.fetchone()
-        print(result)
+```shell
+pip install "git+https://github.com/oceanbase-driver/python-oceanbase-driver.git@v1.0.0"
 ```
 
-This example will print:
+注意：本驱动与上游 PyMySQL 是同一个 `pymysql` 包，互斥安装，二选一。
 
-``` python
-{'password': 'very-secret', 'id': 1}
+## 用法
+
+```python
+import pymysql
+
+conn = pymysql.connect(
+    host="HOST",
+    port=9090,
+    user="USER@TENANT#CLUSTER",
+    password="PASSWORD",
+    database="DBNAME",
+)
+with conn.cursor() as cur:
+    cur.execute("SELECT USER FROM DUAL")
+    print(cur.fetchone())
+conn.close()
 ```
 
-## Resources
+## 注意事项
 
-- DB-API 2.0: <https://www.python.org/dev/peps/pep-0249/>
-- MySQL Reference Manuals: <https://dev.mysql.com/doc/>
-- Getting Help With MariaDB <https://mariadb.com/kb/en/getting-help-with-mariadb/>
-- MySQL client/server protocol:
-  <https://dev.mysql.com/doc/internals/en/client-server-protocol.html>
-- "Connector" channel in MySQL Community Slack:
-  <https://lefred.be/mysql-community-on-slack/>
-- PyMySQL mailing list:
-  <https://groups.google.com/forum/#!forum/pymysql-users>
+1. 业务 SQL 须用 Oracle 方言（如 `FROM DUAL`、`SYSDATE`）。
+2. 默认 `autocommit=False`，写入后记得 `conn.commit()`（标准 PyMySQL 行为）。
+3. 数字类型默认返回 `Decimal`（标准 PyMySQL 行为），可用 `conv` 覆盖。
+4. DSN 参数等细节见上游文档：https://github.com/PyMySQL/PyMySQL
 
-## License
+## 协议
 
-PyMySQL is released under the MIT License. See LICENSE for more
-information.
+MIT，与上游一致。
