@@ -20,6 +20,14 @@ PS_MULTI_RESULTS = 1 << 18
 PLUGIN_AUTH = 1 << 19
 CONNECT_ATTRS = 1 << 20
 PLUGIN_AUTH_LENENC_CLIENT_DATA = 1 << 21
+# MySQL 8.0 uses bit 27 for CLIENT_QUERY_ATTRIBUTES. OceanBase reuses it
+# as Oracle-tenant support indicator (OB_CLIENT_SUPPORT_ORACLE_MODE):
+# the server rejects Oracle-tenant login over the MySQL protocol unless
+# this bit is set (Error 1235). Harmless for MySQL/MariaDB servers as
+# this driver never sends query-attribute packets.
+OPTIONAL_RESULTSET_METADATA = 1 << 25
+ZSTD_COMPRESSION_ALGORITHM = 1 << 26
+QUERY_ATTRIBUTES = 1 << 27
 CAPABILITIES = (
     LONG_PASSWORD
     | LONG_FLAG
@@ -30,6 +38,7 @@ CAPABILITIES = (
     | PLUGIN_AUTH
     | PLUGIN_AUTH_LENENC_CLIENT_DATA
     | CONNECT_ATTRS
+    | QUERY_ATTRIBUTES
 )
 
 # Not done yet
