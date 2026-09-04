@@ -27,6 +27,15 @@ dynamic = ["version"]
 "ed25519" = [
     "PyNaCl>=1.6.2"
 ]
+"sqlalchemy" = [
+    "SQLAlchemy>=1.4"
+]
+
+[project.entry-points."sqlalchemy.dialects"]
+oceanbase = "pyoceanbase.sqlalchemy:OceanBaseDialect_pyoceanbase"
+"oceanbase.pyoceanbase" = "pyoceanbase.sqlalchemy:OceanBaseDialect_pyoceanbase"
+oceanbase_oracle = "pyoceanbase.sqlalchemy_oracle:OceanBaseOracleDialect_pyoceanbase"
+"oceanbase_oracle.pyoceanbase" = "pyoceanbase.sqlalchemy_oracle:OceanBaseOracleDialect_pyoceanbase"
 
 [project.urls]
 "Project" = "https://github.com/oceanbase-driver/python-oceanbase-driver"

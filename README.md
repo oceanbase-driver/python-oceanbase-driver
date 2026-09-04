@@ -38,6 +38,37 @@ with conn.cursor() as cur:
 conn.close()
 ```
 
+## SQLAlchemy
+
+```shell
+pip install "pyoceanbase[sqlalchemy]"
+```
+
+MySQL 租户（`oceanbase+pyoceanbase`，ORM 全功能）：
+
+```python
+from sqlalchemy import create_engine
+
+engine = create_engine("oceanbase+pyoceanbase://USER:PASSWORD@HOST:3306/DBNAME")
+```
+
+Oracle 租户（`oceanbase_oracle+pyoceanbase`，主键用 Sequence，不支持 identity/RETURNING）：
+
+```python
+from sqlalchemy import create_engine, MetaData, Table, Column, Integer, String, Sequence
+
+# 用户名里的 @/# 必须百分号编码：@ -> %40，# -> %23
+engine = create_engine("oceanbase_oracle+pyoceanbase://USER%40TENANT%23CLUSTER:PASSWORD@HOST:9090/DBNAME")
+
+md = MetaData()
+seq = Sequence("T_SEQ")
+t = Table("T", md, Column("id", Integer, seq, primary_key=True), Column("name", String(50)))
+md.create_all(engine)
+```
+
+注意：Oracle 租户须用 Oracle 方言写原生 SQL 时照常 `text("SELECT ... FROM DUAL")`，
+表名建议大写；数字类型默认返回 `Decimal`。
+
 ## 注意事项
 
 1. 业务 SQL 须用 Oracle 方言（如 `FROM DUAL`、`SYSDATE`）。
