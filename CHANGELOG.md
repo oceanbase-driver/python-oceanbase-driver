@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.1.0
+
+* 新增 SQLAlchemy 方言（`pip install "pyoceanbase[sqlalchemy]"`）：
+  `oceanbase+pyoceanbase`（MySQL 租户，ORM 全功能）、
+  `oceanbase_oracle+pyoceanbase`（Oracle 租户，MySQL 协议执行 +
+  Oracle 语法编译，主键用 Sequence，不支持 identity/RETURNING）。
+* 双租户真库验证：建表、写入、查询、分页、事务。
+
 ## v1.0.1
 
 * 分发包改名 `pyoceanbase`，顶层 import 包同步改为 `pyoceanbase`，
